@@ -1,0 +1,25 @@
+{
+  "name": "readmefm",
+  "version": "1.0.0",
+  "description": "a last.fm currently/last played song displayer for your readmes",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BananaJeanss/readmefm.git"
+  },
+  "author": "BananaJeanss",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BananaJeanss/readmefm/issues"
+  },
+  "homepage": "https://github.com/BananaJeanss/readmefm#readme",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
+  }
+}
