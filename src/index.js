@@ -18,11 +18,9 @@ if (!lastfmApiKey || !lastfmSharedSecret) {
   process.exit(1);
 }
 
-const pubFolder = path.join(process.cwd(), "public");
+const pubFolder = path.join(process.cwd(), "src", "public");
 
-app.get("/", (req, res) => { // index thingy
-  res.sendFile(path.join(pubFolder, "index.html"));
-});
+app.use(express.static(pubFolder));
 
 app.get("/songdisplay", async (req, res) => {
   // query params
