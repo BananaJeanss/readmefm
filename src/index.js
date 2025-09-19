@@ -3,6 +3,7 @@ import { configDotenv } from "dotenv";
 import path from "path";
 import fetch from "node-fetch";
 import svgMaker from "./svgMaker.js";
+import fs from "fs";
 
 configDotenv();
 
@@ -21,6 +22,31 @@ if (!lastfmApiKey || !lastfmSharedSecret) {
 const pubFolder = path.join(process.cwd(), "src", "public");
 
 app.use(express.static(pubFolder));
+
+let LOGO_DATA_URL = "";
+try {
+  const logoPath = path.join(pubFolder, "image.png");
+  const logoBuffer = fs.readFileSync(logoPath);
+  const base64 = logoBuffer.toString("base64");
+  LOGO_DATA_URL = `data:image/png;base64,${base64}`;
+} catch (e) {
+  console.warn("Could not preload local logo image; SVG will omit logo.", e?.message || e);
+}
+
+async function toDataUrl(url) {
+  if (!url) return null;
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) return null;
+    const contentType = resp.headers.get("content-type") || "image/jpeg";
+    const buf = Buffer.from(await resp.arrayBuffer());
+    const b64 = buf.toString("base64");
+    return `data:${contentType};base64,${b64}`;
+  } catch (err) {
+    console.error("Error fetching image for data URI:", err?.message || err);
+    return null;
+  }
+}
 
 app.get("/songdisplay", async (req, res) => {
   // query params
@@ -62,7 +88,28 @@ app.get("/songdisplay", async (req, res) => {
         scrobbleCount = "N/A";
       }
     }
-    const svgResponse = svgMaker(apiData, username, theme, hideUsername, scrobbleCount, roundit); // cook up svg
+    // Prepare album art as data URI to avoid broken images inside <img>-embedded SVGs
+    let albumImageUrl = apiData?.recenttracks?.track?.[0]?.image?.[3]?.["#text"] || "";
+    if (!albumImageUrl) {
+      // fallback to smaller sizes if needed
+      const images = apiData?.recenttracks?.track?.[0]?.image || [];
+      for (let i = images.length - 1; i >= 0; i--) {
+        if (images[i]?.["#text"]) { albumImageUrl = images[i]["#text"]; break; }
+      }
+    }
+    const albumDataUri = await toDataUrl(albumImageUrl);
+
+    const svgResponse = svgMaker(
+      apiData,
+      username,
+      theme,
+      hideUsername,
+      scrobbleCount,
+      roundit,
+      albumDataUri,
+      LOGO_DATA_URL
+    ); // cook up svg
+    res.setHeader("Content-Type", "image/svg+xml"); // set content type
     return res.send(svgResponse); // return svg
   } catch (error) {
     console.error("Error fetching data from Last.fm API:", error);

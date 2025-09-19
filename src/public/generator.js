@@ -20,16 +20,23 @@ generateBtn.addEventListener("click", () => {
     const noScrobblesChecked = noScrobbles.checked;
     const rounditChecked = roundit.checked;
 
-    const thisSiteUrl = window.location.origin;
+  const thisSiteUrl = window.location.origin;
 
-    let additionalParams;
-    additionalParams = `?theme=${theme}`;
-    if (noNameChecked) additionalParams += `&noName=true`;
-    if (noScrobblesChecked) additionalParams += `&noScrobbles=true`;
-    if (rounditChecked) additionalParams += `&roundit=true`;
+  const params = new URLSearchParams();
+  params.set("username", username);
+  params.set("theme", theme);
+  if (noNameChecked) params.set("noName", "true");
+  if (noScrobblesChecked) params.set("noScrobbles", "true");
+  if (rounditChecked) params.set("roundit", "true");
 
-    // generate markdown
-    const generatedCode = `![${username}](${thisSiteUrl}/songdisplay/${username}${additionalParams})`;
+  const queryString = `?${params.toString()}`;
+
+  // generate markdown
+  const generatedCode = `![${username}](${thisSiteUrl}/songdisplay${queryString})`;
+
+  // update preview img
+  const previewImg = document.getElementById("previewImg");
+  previewImg.src = `/songdisplay${queryString}`;
 
     // display
     resultDiv.style.display = "block";
