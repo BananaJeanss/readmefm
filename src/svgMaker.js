@@ -43,7 +43,7 @@ export default function svgMaker(
   }
 
   const lastfmcolor = "#E31B23";
-  const logoUrl = logoDataUri || "https://www.last.fm/static/images/lastfm_avatar_twitter.52a5d69a85ac.png";
+  const logoUrl = logoDataUri || "";
 
   let scrobbleText = `<text x="170" y="125" fill="${textColor}" font-size="14">Scrobbles: ${escapeXml(scrobbleCount)}</text>`;
 
@@ -54,17 +54,29 @@ export default function svgMaker(
     topRectThingy = `<rect width="100%" height="40" fill="#E31B23" />`;
   }
 
+  // inline album art or fallback
+  const albumBlock = albumDataUri
+    ? `<image href="${escapeXml(albumDataUri)}" x="20" y="60" width="120" height="120" />`
+    : `
+        <rect x="20" y="60" width="120" height="120" fill="#333"/>
+        <text x="80" y="125" text-anchor="middle" fill="#bbb" font-size="12" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;">No Art</text>
+      `;
+
+  const logoBlock = logoUrl
+    ? `<image href="${escapeXml(logoUrl)}" x="20" y="6" width="30" height="30" />`
+    : "";
+
   let cookupSvg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="200">
+    <?xml version="1.0" encoding="UTF-8"?>
+    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" role="img" aria-label="${escapeXml(playStatus)}: ${song} - ${artist}">
             <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&amp;display=swap');
-                    text { font-family: 'Montserrat', Arial, sans-serif; }
+                    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; }
             </style>
             ${baseRect}
             ${topRectThingy}
-            <image href="${escapeXml(logoUrl)}" x="20" y="6" width="30" height="30" />
+            ${logoBlock}
             <text x="65" y="28" fill="white" font-size="20">${escapeXml(playStatus)}</text>
-            <image href="${escapeXml(albumDataUri || imageUrl)}" x="20" y="60" width="120" height="120" />
+            ${albumBlock}
             <text x="170" y="75" fill="${textColor}" font-size="16">${song} - ${artist}</text>
             <text x="170" y="95" fill="${textColor}" font-size="14">${album}</text>
             <line x1="170" y1="105" x2="470" y2="105" stroke="${textColor}" stroke-width="2"/>

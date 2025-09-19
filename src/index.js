@@ -109,7 +109,9 @@ app.get("/songdisplay", async (req, res) => {
       albumDataUri,
       LOGO_DATA_URL
     ); // cook up svg
-    res.setHeader("Content-Type", "image/svg+xml"); // set content type
+  res.setHeader("Content-Type", "image/svg+xml; charset=utf-8"); // set content type
+  res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300"); // cache for 5 minutes
+  res.setHeader("X-Content-Type-Options", "nosniff");
     return res.send(svgResponse); // return svg
   } catch (error) {
     console.error("Error fetching data from Last.fm API:", error);
