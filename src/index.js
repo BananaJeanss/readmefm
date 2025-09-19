@@ -24,6 +24,7 @@ const pubFolder = path.join(process.cwd(), "src", "public");
 app.use(express.static(pubFolder));
 
 let LOGO_DATA_URL = "";
+let MONTSERRAT_DATA_URL = "";
 try {
   const logoPath = path.join(pubFolder, "image.png");
   const logoBuffer = fs.readFileSync(logoPath);
@@ -31,6 +32,16 @@ try {
   LOGO_DATA_URL = `data:image/png;base64,${base64}`;
 } catch (e) {
   console.warn("Could not preload local logo image; SVG will omit logo.", e?.message || e);
+}
+
+// preload local montserrat woff2 font if available
+try {
+  const fontPath = path.join(pubFolder, "Montserrat-SemiBold.woff2");
+  const fontBuffer = fs.readFileSync(fontPath);
+  const base64 = fontBuffer.toString("base64");
+  MONTSERRAT_DATA_URL = `data:font/woff2;base64,${base64}`;
+} catch (e) {
+  console.warn("Montserrat font not found; falling back to system fonts.", e?.message || e);
 }
 
 async function toDataUrl(url) {
@@ -107,7 +118,8 @@ app.get("/songdisplay", async (req, res) => {
       scrobbleCount,
       roundit,
       albumDataUri,
-      LOGO_DATA_URL
+      LOGO_DATA_URL,
+      MONTSERRAT_DATA_URL
     ); // cook up svg
   res.setHeader("Content-Type", "image/svg+xml; charset=utf-8"); // set content type
   res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300"); // cache for 5 minutes

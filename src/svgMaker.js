@@ -6,7 +6,8 @@ export default function svgMaker(
   scrobbleCount,
   roundit,
   albumDataUri,
-  logoDataUri
+  logoDataUri,
+  fontDataUri
 ) {
   // escape XML entities
   const escapeXml = (value) =>
@@ -66,11 +67,16 @@ export default function svgMaker(
     ? `<image href="${escapeXml(logoUrl)}" x="20" y="6" width="30" height="30" />`
     : "";
 
+  const fontFaceCss = fontDataUri
+    ? `@font-face{font-family:'Montserrat';font-style:normal;font-weight:500;src:url(${fontDataUri}) format('woff2');font-display:swap;}`
+    : "";
+
   let cookupSvg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" role="img" aria-label="${escapeXml(playStatus)}: ${song} - ${artist}">
-  <style>
-    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; }
-  </style>
+        <style>
+                ${fontFaceCss}
+                text { font-family: 'Montserrat', 'Segoe UI', SegoeUI, -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; font-weight: 500; }
+        </style>
   ${baseRect}
   ${topRectThingy}
   ${logoBlock}
