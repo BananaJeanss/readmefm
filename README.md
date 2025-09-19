@@ -18,7 +18,7 @@ If you don't want to self-host, the setup is pretty simple.
 
 ### Example
 
-![bananajeans](https://readmefm.bnajns.hackclub.app/songdisplay?username=bananajeans&theme=dark&roundit=true)
+![bananajeans](https://readmefm.bnajns.hackclub.app/songdisplay?username=bananajeans&theme=dark&roundit=True)
 
 ## Quick Start (self-hosting)
 
