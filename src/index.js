@@ -112,7 +112,7 @@ app.get("/songdisplay", async (req, res) => {
   res.setHeader("Content-Type", "image/svg+xml; charset=utf-8"); // set content type
   res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300"); // cache for 5 minutes
   res.setHeader("X-Content-Type-Options", "nosniff");
-    return res.send(svgResponse); // return svg
+  return res.send(typeof svgResponse === "string" ? svgResponse.trimStart() : svgResponse); // return svg without leading whitespace
   } catch (error) {
     console.error("Error fetching data from Last.fm API:", error);
     return res.status(500).send("Error fetching data from Last.fm API");

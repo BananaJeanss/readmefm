@@ -66,22 +66,20 @@ export default function svgMaker(
     ? `<image href="${escapeXml(logoUrl)}" x="20" y="6" width="30" height="30" />`
     : "";
 
-  let cookupSvg = `
-    <?xml version="1.0" encoding="UTF-8"?>
-    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" role="img" aria-label="${escapeXml(playStatus)}: ${song} - ${artist}">
-            <style>
-                    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; }
-            </style>
-            ${baseRect}
-            ${topRectThingy}
-            ${logoBlock}
-            <text x="65" y="28" fill="white" font-size="20">${escapeXml(playStatus)}</text>
-            ${albumBlock}
-            <text x="170" y="75" fill="${textColor}" font-size="16">${song} - ${artist}</text>
-            <text x="170" y="95" fill="${textColor}" font-size="14">${album}</text>
-            <line x1="170" y1="105" x2="470" y2="105" stroke="${textColor}" stroke-width="2"/>
-            ${useScrobbles ? scrobbleText : ""}
-    </svg>
-    `;
+  let cookupSvg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" role="img" aria-label="${escapeXml(playStatus)}: ${song} - ${artist}">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; }
+  </style>
+  ${baseRect}
+  ${topRectThingy}
+  ${logoBlock}
+  <text x="65" y="28" fill="white" font-size="20">${escapeXml(playStatus)}</text>
+  ${albumBlock}
+  <text x="170" y="75" fill="${textColor}" font-size="16">${song} - ${artist}</text>
+  <text x="170" y="95" fill="${textColor}" font-size="14">${album}</text>
+  <line x1="170" y1="105" x2="470" y2="105" stroke="${textColor}" stroke-width="2"/>
+  ${useScrobbles ? scrobbleText : ""}
+</svg>`;
   return cookupSvg;
 }
