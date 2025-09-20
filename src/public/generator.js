@@ -8,17 +8,27 @@ const roundit = document.getElementById("roundit");
 
 const resultDiv = document.getElementById("outputSection");
 
-generateBtn.addEventListener("click", () => {
+function ThingyFunction() {
   const username = usernameInput.value.trim();
-    if (!username) {
-      alert("Please enter a Last.fm username.");
-      return;
-    }
+  if (!username) {
+    alert("Please enter a Last.fm username.");
+    return;
+  }
+  if (username.length > 15) {
+    alert("Username is too long. Maximum length is 15 characters.");
+    return;
+  }
+  if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+    alert(
+      "Invalid username. Only letters, numbers, underscores, and hyphens are allowed."
+    );
+    return;
+  }
 
-    const theme = selectedTheme.value || "dark";
-    const noNameChecked = noName.checked;
-    const noScrobblesChecked = noScrobbles.checked;
-    const rounditChecked = roundit.checked;
+  const theme = selectedTheme.value || "dark";
+  const noNameChecked = noName.checked;
+  const noScrobblesChecked = noScrobbles.checked;
+  const rounditChecked = roundit.checked;
 
   const thisSiteUrl = window.location.origin;
 
@@ -38,7 +48,18 @@ generateBtn.addEventListener("click", () => {
   const previewImg = document.getElementById("previewImg");
   previewImg.src = `/songdisplay${queryString}`;
 
-    // display
-    resultDiv.style.display = "block";
-    resultDiv.querySelector("#outputText").textContent = generatedCode;
+  // display
+  resultDiv.style.display = "block";
+  resultDiv.querySelector("#outputText").textContent = generatedCode;
+}
+
+usernameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    ThingyFunction();
+  }
+});
+
+generateBtn.addEventListener("click", () => {
+  ThingyFunction();
 });
